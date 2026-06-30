@@ -1,23 +1,30 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from .models import Thermo, Irrigazione, ConsumoElettrico
-import datetime
+from django.utils import timezone
 
 def home(request):
     return render(request, 'dash/home.html')
+
 def post(request):
     if request.method == 'POST':
         field = request.POST.get('field')
         if field == 'thermo':
-            temp = request.POST.get('temp')
-            date = datetime.datetime.now()
-            Thermo.objects.create(temperature=temp, date=date)
+            temp = float(request.POST.get('temp'))
+            date = timezone.now()
+            Thermo.objects.create(Temperatura=temp, Data=date)
+            return HttpResponse("OK", status=200)
         elif field == 'irrigazione':
-            status = request.POST.get('status')
-            date = datetime.datetime.now()
-            Irrigazione.objects.create(status=status, date=date)
+            status = request.POST.get('status') == 'true'
+            date = timezone.now()
+            Irrigazione.objects.create(valido=status, Data=date)
+            return HttpResponse("OK", status=200)
         elif field == 'consumo_elettrico':
-            power = request.POST.get('power')
-            date = datetime.datetime.now()
-            ConsumoElettrico.objects.create(power=power, date=date)
+            power = float(request.POST.get('power'))
+            date = timezone.now()
+            ConsumoElettrico.objects.create(Consumo=power, Data=date)
+            return HttpResponse("OK", status=200)
+        
+    return HttpResponse("Errore", status=405)
 
 
