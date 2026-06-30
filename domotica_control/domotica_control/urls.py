@@ -19,6 +19,5 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('dash.urls')),
-    path('dash_post/', include('dash.urls'))
+    path('', include('dash.urls')) # questo include TUTTE le url della app dash, non serve includere ogni url
 ]
