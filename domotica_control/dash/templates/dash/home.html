@@ -94,7 +94,8 @@
             min-height: 420px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            align-items: center;
+            justify-content: flex-start;
             padding: 20px;
             border: 1px solid rgba(146, 161, 181, 0.2);
             border-radius: 8px;
@@ -104,15 +105,12 @@
             box-shadow: var(--shadow);
         }
 
-        .device-window[data-active="false"] {
-            opacity: 0.72;
-        }
-
         .window-header {
+            width: 100%;
             display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
+            justify-content: center;
+            padding-top: 12px;
+            text-align: center;
         }
 
         .device-name {
@@ -121,93 +119,12 @@
             letter-spacing: 0;
         }
 
-        .device-location {
-            margin: 5px 0 0;
-            color: var(--muted);
-            font-size: 0.92rem;
-        }
-
-        .icon-badge {
-            flex: 0 0 auto;
-            width: 44px;
-            height: 44px;
-            display: grid;
-            place-items: center;
-            border-radius: 8px;
-            border: 1px solid var(--line);
-            background: var(--panel-soft);
-            color: var(--text);
-            font-size: 1.4rem;
-        }
-
-        .metric {
-            margin: 32px 0;
-        }
-
-        .metric-value {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-            font-size: clamp(3.1rem, 8vw, 5.4rem);
+        .placeholder-value {
+            margin: 128px 0 0;
+            font-size: clamp(3.2rem, 8vw, 5.2rem);
             font-weight: 800;
-            line-height: 0.95;
+            line-height: 1;
             letter-spacing: 0;
-        }
-
-        .metric-unit {
-            color: var(--muted);
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-
-        .metric-label {
-            margin: 12px 0 0;
-            color: var(--muted);
-            font-size: 0.95rem;
-        }
-
-        .progress-track {
-            height: 9px;
-            overflow: hidden;
-            border-radius: 999px;
-            background: #0b1119;
-            border: 1px solid rgba(146, 161, 181, 0.12);
-        }
-
-        .progress-fill {
-            height: 100%;
-            width: var(--level);
-            border-radius: inherit;
-            background: var(--accent);
-            box-shadow: 0 0 24px var(--accent);
-            transition: width 180ms ease;
-        }
-
-        .readings {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-            margin: 18px 0;
-        }
-
-        .reading {
-            min-height: 70px;
-            padding: 12px;
-            border-radius: 8px;
-            background: #0d131d;
-            border: 1px solid rgba(146, 161, 181, 0.14);
-        }
-
-        .reading span {
-            display: block;
-            color: var(--muted);
-            font-size: 0.78rem;
-        }
-
-        .reading strong {
-            display: block;
-            margin-top: 8px;
-            font-size: 1.05rem;
         }
 
         .accent-blue {
@@ -261,8 +178,8 @@
                 padding: 16px;
             }
 
-            .readings {
-                grid-template-columns: 1fr;
+            .placeholder-value {
+                margin-top: 96px;
             }
 
         }
@@ -272,118 +189,34 @@
     <main class="dashboard">
         <header class="topbar">
             <div>
-                <h1>Smart Home</h1>
+                <h1>Dash Monitoraggio e controllo</h1>
             </div>
 
             <div class="status-strip" aria-label="Home status summary">
-                <div class="pill"><span class="dot"></span>All systems online</div>
+                <div class="pill"><span class="dot"></span>Tutti i sistemi online</div>
             </div>
         </header>
 
         <section class="device-grid" aria-label="Device dashboard">
-            <article class="device-window accent-blue" data-active="true">
-                <div>
-                    <div class="window-header">
-                        <div>
-                            <h2 class="device-name">Living Room Lights</h2>
-                            <p class="device-location">Ground floor</p>
-                        </div>
-                        <div class="icon-badge" aria-hidden="true">L</div>
-                    </div>
-
-                    <div class="metric">
-                        <div class="metric-value">
-                            <span class="js-level">72</span><span class="metric-unit">%</span>
-                        </div>
-                        <p class="metric-label">Current brightness</p>
-                    </div>
-
-                    <div class="progress-track" aria-hidden="true">
-                        <div class="progress-fill" style="--level: 72%;"></div>
-                    </div>
-
-                    <div class="readings">
-                        <div class="reading">
-                            <span>Scene</span>
-                            <strong>Evening</strong>
-                        </div>
-                        <div class="reading">
-                            <span>Color</span>
-                            <strong>Warm white</strong>
-                        </div>
-                    </div>
+            <article class="device-window accent-blue">
+                <div class="window-header">
+                    <h2 class="device-name">temperatura</h2>
                 </div>
-
+                <div class="placeholder-value">TBD</div>
             </article>
 
-            <article class="device-window accent-green" data-active="true">
-                <div>
-                    <div class="window-header">
-                        <div>
-                            <h2 class="device-name">Thermostat</h2>
-                            <p class="device-location">Hallway</p>
-                        </div>
-                        <div class="icon-badge" aria-hidden="true">T</div>
-                    </div>
-
-                    <div class="metric">
-                        <div class="metric-value">
-                            <span class="js-level">21.5</span><span class="metric-unit">C</span>
-                        </div>
-                        <p class="metric-label">Target temperature</p>
-                    </div>
-
-                    <div class="progress-track" aria-hidden="true">
-                        <div class="progress-fill" style="--level: 58%;"></div>
-                    </div>
-
-                    <div class="readings">
-                        <div class="reading">
-                            <span>Humidity</span>
-                            <strong>48%</strong>
-                        </div>
-                        <div class="reading">
-                            <span>Mode</span>
-                            <strong>Auto</strong>
-                        </div>
-                    </div>
+            <article class="device-window accent-green">
+                <div class="window-header">
+                    <h2 class="device-name">consumo energetico</h2>
                 </div>
-
+                <div class="placeholder-value">TBD</div>
             </article>
 
-            <article class="device-window accent-amber" data-active="false">
-                <div>
-                    <div class="window-header">
-                        <div>
-                            <h2 class="device-name">Security Camera</h2>
-                            <p class="device-location">Front door</p>
-                        </div>
-                        <div class="icon-badge" aria-hidden="true">C</div>
-                    </div>
-
-                    <div class="metric">
-                        <div class="metric-value">
-                            <span class="js-level">Idle</span>
-                        </div>
-                        <p class="metric-label">Motion detection</p>
-                    </div>
-
-                    <div class="progress-track" aria-hidden="true">
-                        <div class="progress-fill" style="--level: 22%;"></div>
-                    </div>
-
-                    <div class="readings">
-                        <div class="reading">
-                            <span>Last event</span>
-                            <strong>22:14</strong>
-                        </div>
-                        <div class="reading">
-                            <span>Signal</span>
-                            <strong>Strong</strong>
-                        </div>
-                    </div>
+            <article class="device-window accent-amber">
+                <div class="window-header">
+                    <h2 class="device-name">stato irrigazione</h2>
                 </div>
-
+                <div class="placeholder-value">TBD</div>
             </article>
         </section>
     </main>
