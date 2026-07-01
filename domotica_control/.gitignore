@@ -1,6 +1,9 @@
 # Notes and documentation drafts
 *.md
 
+# Local database test scripts
+dash/DBtest.py
+
 # Python virtual environments
 venv/
 .venv/

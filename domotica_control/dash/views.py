@@ -2,10 +2,19 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from .models import Thermo, Irrigazione, ConsumoElettrico
 from django.utils import timezone
+from . import data_process
 
 def home(request):
-    return render(request, 'dash/home.html')
+    sensor_data = data_process.get_sensor_data()
+    return render(request, 'dash/home.html', sensor_data) #i dat dei sensori, definiti nel file data_process
 
+
+''' questa funzione gestisce le richieste POST mandate dai microcontrollori smart
+    e le immagazzina nel DB, restituisce un messaggio HTTP se i dati risultano congrui,
+    altrimenti restituisce un codice errore. Se si vuole aggiungere o cambiare un dato, è
+    consigliato cambiare i modelli e apportare le modifiche a questo file ed al file 
+    utility data_process.py
+'''
 def post(request):
     if request.method == 'POST':
         field = request.POST.get('field')

@@ -2,6 +2,9 @@
 .agents/
 .codex/
 
+# Local database test scripts
+domotica_control/dash/DBtest.py
+
 # Notes and documentation drafts
 *.md
 
