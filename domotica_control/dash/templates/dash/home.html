@@ -119,7 +119,7 @@
             letter-spacing: 0;
         }
 
-        .placeholder-value {
+        .data_value {
             margin: 128px 0 0;
             font-size: clamp(3.2rem, 8vw, 5.2rem);
             font-weight: 800;
@@ -139,6 +139,62 @@
             --accent: var(--amber);
         }
 
+        .curtain-controller {
+            display: grid;
+            grid-template-columns: 120px minmax(0, 1fr);
+            align-items: center;
+            gap: 34px;
+            width: min(760px, 100%);
+            min-height: 260px;
+            margin-top: 20px;
+            padding: 28px 34px;
+            border: 1px solid rgba(146, 161, 181, 0.2);
+            border-radius: 8px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 34%),
+                var(--panel);
+            box-shadow: var(--shadow);
+        }
+
+        .curtain-slider-wrap {
+            display: grid;
+            place-items: center;
+            min-height: 210px;
+        }
+
+        .curtain-slider {
+            width: 210px;
+            accent-color: var(--blue);
+            transform: rotate(-90deg);
+            cursor: pointer;
+        }
+
+        .curtain-copy {
+            min-width: 0;
+        }
+
+        .curtain-copy h2 {
+            margin: 0;
+            font-size: clamp(1.7rem, 4vw, 2.8rem);
+            line-height: 1.05;
+            letter-spacing: 0;
+        }
+
+        .curtain-copy p {
+            margin: 34px 0 0;
+            color: var(--muted);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .curtain-status {
+            color: var(--text);
+        }
+
+        .csrf-token-holder {
+            display: none;
+        }
+
         @media (max-width: 920px) {
             .topbar {
                 align-items: flex-start;
@@ -155,6 +211,11 @@
 
             .device-window {
                 min-height: 360px;
+            }
+
+            .curtain-controller {
+                grid-template-columns: 96px minmax(0, 1fr);
+                gap: 22px;
             }
         }
 
@@ -178,10 +239,25 @@
                 padding: 16px;
             }
 
-            .placeholder-value {
+            .data_value {
                 margin-top: 96px;
             }
 
+            .curtain-controller {
+                grid-template-columns: 1fr;
+                justify-items: center;
+                min-height: auto;
+                padding: 22px 18px 28px;
+                text-align: center;
+            }
+
+            .curtain-slider-wrap {
+                min-height: 190px;
+            }
+
+            .curtain-copy p {
+                margin-top: 20px;
+            }
         }
     </style>
 </head>
@@ -202,23 +278,87 @@
                 <div class="window-header">
                     <h2 class="device-name">temperatura</h2>
                 </div>
-                <div class="placeholder-value">TBD</div>
+                <div class="data_value">{{ ult_temp.Temperatura }}</div>
             </article>
 
             <article class="device-window accent-green">
                 <div class="window-header">
                     <h2 class="device-name">consumo energetico</h2>
                 </div>
-                <div class="placeholder-value">TBD</div>
+                <div class="data_value">{{ ult_ConsumoElettrico.Consumo }}</div>
             </article>
 
             <article class="device-window accent-amber">
                 <div class="window-header">
-                    <h2 class="device-name">stato irrigazione</h2>
+                    <h2 class="device-name">Ultima irrigazione</h2>
                 </div>
-                <div class="placeholder-value">TBD</div>
+                <div class="data_value">{{ ult_Irrigazione.Data }}</div>
             </article>
         </section>
+
+        <section
+            class="curtain-controller"
+            aria-label="Controllo globale tapparelle"
+            data-post-url="/INSERIRE-URL-CONTROLLO-TAPPARELLE/"
+        >
+            <form class="csrf-token-holder">
+                {% csrf_token %}
+            </form>
+
+            <div class="curtain-slider-wrap">
+                <input
+                    class="curtain-slider"
+                    id="curtain-position"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="30"
+                    aria-label="Posizione tapparelle"
+                >
+            </div>
+
+            <div class="curtain-copy">
+                <h2>controllo globale tapparelle</h2>
+                <p>Posizione attuale: <span class="curtain-status" id="curtain-status">30%</span></p>
+            </div>
+        </section>
     </main>
+
+    <script>
+        const curtainController = document.querySelector(".curtain-controller");
+        const curtainSlider = document.querySelector("#curtain-position");
+        const curtainStatus = document.querySelector("#curtain-status");
+        const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]");
+
+        function getCookie(name) {
+            const cookie = document.cookie
+                .split("; ")
+                .find((row) => row.startsWith(`${name}=`));
+
+            return cookie ? decodeURIComponent(cookie.split("=")[1]) : "";
+        }
+
+        function updateCurtainStatus() {
+            curtainStatus.textContent = `${curtainSlider.value}%`;
+        }
+
+        function sendCurtainPosition() {
+            fetch(curtainController.dataset.postUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": csrfToken ? csrfToken.value : getCookie("csrftoken"),
+                },
+                body: new URLSearchParams({
+                    position: curtainSlider.value,
+                }),
+            }).catch(() => {
+                console.error("Curtain controller POST failed.");
+            });
+        }
+
+        curtainSlider.addEventListener("input", updateCurtainStatus);
+        curtainSlider.addEventListener("change", sendCurtainPosition);
+    </script>
 </body>
 </html>
