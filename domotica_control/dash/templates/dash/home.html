@@ -285,14 +285,14 @@
                 <div class="window-header">
                     <h2 class="device-name">consumo energetico</h2>
                 </div>
-                <div class="data_value">{{ ult_ConsumoElettrico.Consumo }}</div>
+                <div class="data_value">{{ ult_ConsumoElettrico.Consumo }} Kw</div>
             </article>
 
             <article class="device-window accent-amber">
                 <div class="window-header">
                     <h2 class="device-name">Ultima irrigazione</h2>
                 </div>
-                <div class="data_value">{{ ult_Irrigazione.Data }}</div>
+                <div class="data_value">{{ ult_Irrigazione.Data|date:"d/m H:i" }}</div>
             </article>
         </section>
 
