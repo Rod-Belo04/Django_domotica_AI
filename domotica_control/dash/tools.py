@@ -12,6 +12,8 @@ specific position, and instead says things like "apri/chiudi le tapparelle", the
 will be either 0(open) or 100(closed). If the user gives a "broad" range, like "apri le tapparelle poco,
  then the model must ask the user a specific value from 0 to 100, without calling this function'''
 def change_tapp_pos(position: int):
+    if position < 0 or position > 100:
+        return "Invalid"
     try:
         response = requests.post("http://192.168.1.100/tapp_control", data={"position": position}, timeout=0.8)
     except requests.RequestException:

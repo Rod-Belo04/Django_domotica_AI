@@ -195,6 +195,84 @@
             display: none;
         }
 
+        .ask-ai-section {
+            width: min(620px, 100%);
+            margin-top: 28px;
+        }
+
+        .ask-ai-panel,
+        .ai-response {
+            border: 1px solid rgba(146, 161, 181, 0.2);
+            border-radius: 8px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 34%),
+                var(--panel);
+            box-shadow: var(--shadow);
+        }
+
+        .ask-ai-panel {
+            padding: 24px;
+        }
+
+        .ask-ai-panel h2 {
+            margin: 0 0 18px;
+            font-size: 1.35rem;
+            letter-spacing: 0;
+        }
+
+        .ask-ai-form {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 58px;
+            gap: 14px;
+            align-items: stretch;
+        }
+
+        .ask-ai-input {
+            min-height: 64px;
+            width: 100%;
+            resize: vertical;
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #0d131d;
+            color: var(--text);
+            font: inherit;
+        }
+
+        .ask-ai-input:focus {
+            outline: 2px solid var(--blue);
+            outline-offset: 2px;
+        }
+
+        .ask-ai-submit {
+            min-height: 64px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel-soft);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .ask-ai-submit:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .ai-response {
+            margin-top: 22px;
+            padding: 22px 24px;
+            color: var(--text);
+        }
+
+        .ai-response p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 1.02rem;
+            line-height: 1.45;
+        }
+
         @media (max-width: 920px) {
             .topbar {
                 align-items: flex-start;
@@ -257,6 +335,14 @@
 
             .curtain-copy p {
                 margin-top: 20px;
+            }
+
+            .ask-ai-form {
+                grid-template-columns: 1fr;
+            }
+
+            .ask-ai-submit {
+                min-height: 48px;
             }
         }
     </style>
@@ -321,6 +407,32 @@
                 <h2>controllo globale tapparelle</h2>
                 <p>Posizione attuale: <span class="curtain-status" id="curtain-status">30%</span></p>
             </div>
+        </section>
+
+        <section class="ask-ai-section" aria-label="Ask AI">
+            <div class="ask-ai-panel">
+                <h2>Ask AI</h2>
+
+                <form class="ask-ai-form" action="{% url 'dash:ai_calls' %}" method="post">
+                    {% csrf_token %}
+                    <textarea
+                        class="ask-ai-input"
+                        name="ai_request"
+                        aria-label="Richiesta per AI"
+                    ></textarea>
+                    <button class="ask-ai-submit" type="submit" aria-label="Invia richiesta AI">&gt;</button>
+                </form>
+            </div>
+
+            {% if ai_message %}
+                <div class="ai-response">
+                    <p>{{ ai_message }}</p>
+                </div>
+            {% elif request.GET.ai_message %}
+                <div class="ai-response">
+                    <p>{{ request.GET.ai_message }}</p>
+                </div>
+            {% endif %}
         </section>
     </main>
 

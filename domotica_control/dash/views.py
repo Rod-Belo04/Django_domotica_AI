@@ -4,9 +4,10 @@ from .models import Thermo, Irrigazione, ConsumoElettrico
 from django.utils import timezone
 from . import data_process
 
-def home(request):
-    sensor_data = data_process.get_sensor_data()
-    return render(request, 'dash/home.html', sensor_data) #i dat dei sensori, definiti nel file data_process
+def home(request, ai_message=''):
+    page_data = data_process.get_sensor_data()
+    page_data['ai_message'] = ai_message  # Aggiungi il messaggio AI al contesto della pagina
+    return render(request, 'dash/home.html', page_data) #i dat dei sensori, definiti nel file data_process
 
 
 ''' questa funzione gestisce le richieste POST mandate dai microcontrollori smart
@@ -35,5 +36,14 @@ def post(request):
             return HttpResponse("OK", status=200)
         
     return HttpResponse("Errore", status=405)
+
+
+'''questa funzione gestisce le richieste POST provenienti dagli user che usano le funzioni AI,
+la richiesta POST contiene il messaggio dell' utente, che poi viene passato al modello AI che 
+la elabora e chiama un tool e/o fornisce una risposta.'''
+def ai_calls(request):
+    if request.method == 'POST':
+        messaggio_utente = request.POST.get('messaggio')
+        # Qui puoi aggiungere la logica per elaborare il messaggio
 
 
