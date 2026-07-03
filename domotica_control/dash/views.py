@@ -1,8 +1,12 @@
+import json
 from django.http import HttpResponse
 from django.shortcuts import render
 from .models import Thermo, Irrigazione, ConsumoElettrico
 from django.utils import timezone
 from . import data_process
+from . import tools
+from openai import OpenAI
+client = OpenAI()
 
 def home(request, ai_message=''):
     page_data = data_process.get_sensor_data()
@@ -43,7 +47,35 @@ la richiesta POST contiene il messaggio dell' utente, che poi viene passato al m
 la elabora e chiama un tool e/o fornisce una risposta.'''
 def ai_calls(request):
     if request.method == 'POST':
-        messaggio_utente = request.POST.get('messaggio')
-        # Qui puoi aggiungere la logica per elaborare il messaggio
+        messaggio_utente = request.POST.get('ai_request')
+        response = client.responses.create(
+            model="gpt-5.4-mini",
+            tools=tools.tools,
+            input=messaggio_utente
+        )
+        for item in response.output:
+            if item.type == 'function_call':
+                if item.name == 'change_tapp_pos':
+                    args = json.loads(item.arguments)
+                    position = int(args["position"])
+                    tools.change_tapp_pos(position)
+                    ai_message = f"Posizione tapparelle cambiata a {position}."
+                if item.name == 'start_irrigation':
+                    result = tools.start_irrigation()
+                    ai_message = f"Irrigazione avviata. Risultato: {result}"
+                if item.name == 'get_temp':
+                    temperature = tools.get_temp()
+                    ai_message = f"La temperatura attuale e {temperature}."
+                if item.name == 'get_irrigation_date':
+                    irrigation_date = tools.get_irrigation_date()
+                    ai_message = f"L'ultima irrigazione risale a {irrigation_date}."
+                if item.name == 'get_electric_consumption':
+                    consumption = tools.get_electric_consumption()
+                    ai_message = f"Il consumo elettrico attuale e {consumption} Kw."
+                return home(request, ai_message=ai_message)
+            elif item.type == 'message':
+                ai_message = item.content[0].text
+                return home(request, ai_message=ai_message)
+        
 
 
