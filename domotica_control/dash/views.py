@@ -1,6 +1,6 @@
 import json
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Thermo, Irrigazione, ConsumoElettrico
 from django.utils import timezone
 from . import data_process
@@ -48,6 +48,8 @@ la elabora e chiama un tool e/o fornisce una risposta.'''
 def ai_calls(request):
     if request.method == 'POST':
         messaggio_utente = request.POST.get('ai_request')
+        if messaggio_utente == "":
+            return redirect('home', ai_message="Errore: richiesta AI vuota.")
         response = client.responses.create(
             model="gpt-5.4-mini",
             tools=tools.tools,
@@ -76,6 +78,7 @@ def ai_calls(request):
             elif item.type == 'message':
                 ai_message = item.content[0].text
                 return home(request, ai_message=ai_message)
+    return home(request, ai_message="Errore nella richiesta AI.")
         
 
 
