@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Dashboard Domotica con Integrazione AI
 
 Questo progetto consiste in una web app Django pensata per monitorare e controllare un piccolo sistema di domotica. L'app raccoglie dati da dispositivi/sensori, li salva in un database e li presenta in una dashboard web. Include inoltre una prima integrazione con OpenAI per permettere all'utente di interagire con il sistema tramite richieste in linguaggio naturale.
@@ -75,3 +76,6 @@ Il modello interpreta la richiesta dell'utente, mentre il backend Django mantien
 - Il progetto richiede una chiave API OpenAI. L'utente deve configurare la propria chiave, ad esempio tramite variabile d'ambiente `OPENAI_API_KEY`.
 - Gli indirizzi IP dei microcontrollori devono essere configurati dall'utente. Nel codice, i precedenti indirizzi hardcoded sono stati sostituiti con la stringa `rimpiazza_con_tuo_ip`.
 - Per permettere alla pagina di renderizzare correttamente i dati della dashboard, il database deve contenere almeno una entry per ognuna delle tre tabelle principali: temperatura, consumo elettrico e irrigazione.
+=======
+# Django_domotica_AI
+>>>>>>> 939fb0bba48b7f32d1f044c0c4391242fc0fa129
