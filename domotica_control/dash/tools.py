@@ -92,19 +92,19 @@ def change_tapp_pos(position: int):
     if position < 0 or position > 100:
         return "Invalid"
     try:
-        response = requests.post("http://192.168.1.100/tapp_control", data={"position": position}, timeout=0.8)
+        response = requests.post("rimpiazza_con_tuo_ip", data={"position": position}, timeout=0.8)
     except requests.RequestException:
         return "Failed"
     return "Success" if response.status_code == 200 else "Failed" 
 
 
 '''dice al microcontrollore di avviare il sistema di irrigazione. Il sistema attuale non supporta
-programmazione, durata dell'irrigazione o altre funzioni oltre all'accensione. Se l'utente dice
+schedulazione, durata dell'irrigazione o altre funzioni oltre all'accensione. Se l'utente dice
 "irriga per 10 minuti", l'AI deve spiegare che l'unico comando supportato e l'avvio immediato
 del sistema, e deve chiedere di nuovo all'utente se vuole avviarlo o no'''
 def start_irrigation():
     try:
-        response = requests.post("http://192.168.1.100/irrigation", data={"start": True}, timeout=0.8)
+        response = requests.post("rimpiazza_con_tuo_ip", data={"start": True}, timeout=0.8)
     except requests.RequestException:
         return "Failed"
     return "Success" if response.status_code == 200 else "Failed"
